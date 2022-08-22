@@ -150,6 +150,16 @@
 		"displayName": "Visual Studio 17 2022 - v143,host=x64",
 		"hidden": false,
 		"inherits": ["base", "wxwidgets"],
+		"cacheVariables": {
+			"CMAKE_C_FLAGS_INIT": {
+				"type": "STRING",
+				"value": "/arch:AVX"
+			},
+			"CMAKE_CXX_FLAGS_INIT": {
+				"type": "STRING",
+				"value": "/arch:AVX"
+			}
+		},
 		"generator": "Visual Studio 17 2022",
 		"toolset": "v143,host=x64",
 		"binaryDir": "../build/msvc",

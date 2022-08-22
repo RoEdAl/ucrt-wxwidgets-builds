@@ -15,7 +15,7 @@ $BuildDir = Join-Path -Path $PSScriptRoot -ChildPath 'build'
 $MsvcBuildDir = Join-Path -Path $BuildDir -ChildPath 'msvc'
 
 if(-Not (Test-Path -Path $MsvcBuildDir -PathType Container)) {
-	& $CMake -S $SourceDir --preset mingw64
+	& $CMake -S $SourceDir --preset msvc
 }
 
 # Build
