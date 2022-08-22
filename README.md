@@ -15,3 +15,9 @@ MinGW [UCRT] based [wxWidgets](http://www.wxwidgets.org/) builds.
 * `make-workdir.ps1` - download required packages, prepare work directory
 * `mingw-build-wxwidgets.ps1` - *MinGW64* - compile & build packages
 * `msvc-build-wxwidgets.ps1` - *MS Visual Studio 2022* - compile & build packages
+
+## wxWidgets configuration
+
+*wxWidgets* library configuration is stored in [presets](tmpl/CMakePresets.json) file.
+Preset name is *wxwidgets*.
+
