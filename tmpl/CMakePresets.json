@@ -7,64 +7,12 @@
 		"hidden": true,
 		"condition": {"type": "equals","lhs": "${hostSystemName}","rhs": "Windows"},
 		"environment": {
-			"WXWORKDIR": "@WX_WORKDIR@",
-			"CMAKE_PROGRAM_PATH": "$env{WXWORKDIR}/ninja"
-		},
-		"cacheVariables": {
-			"CPACK_THREADS": {
-				"type": "STRING",
-				"value": "@PARALLEL_LEVEL@"
-			},
-			"CPACK_ARCHIVE_THREADS": {
-				"type": "STRING",
-				"value": "@PARALLEL_LEVEL@"
-			},
-			"CPACK_PACKAGE_DIRECTORY": {
-				"type": "PATH",
-				"value": "$env{WXWORKDIR}/archive"
-			}
+			"WXWORKDIR": "@WX_WORKDIR@"
 		}
 	},
 	{
-		"name": "mingw",
+		"name": "wxwidgets",
 		"hidden": true,
-		"inherits": "base",
-		"environment": {
-			"MINGW_DIR": "@MINGW_DIR@",
-			"CMAKE_COLOR_DIAGNOSTICS": "OFF",
-			"CMAKE_BUILD_PARALLEL_LEVEL": "@PARALLEL_LEVEL@",
-			"MINGW_CFLAGS": "\"-ffile-prefix-map=${fileDir}=./wxWidgets\"",
-			"MINGW_CXXFLAGS": "\"-ffile-prefix-map=${fileDir}=./wxWidgets\""
-		},
-		"cacheVariables": {
-			"CMAKE_CONFIGURATION_TYPES": {
-				"type": "STRING",
-				"value": "Debug;Release"
-			},
-			"CMAKE_C_VISIBILITY_PRESET": {
-				"type": "STRING",
-				"value": "hidden"
-			},
-			"CMAKE_CXX_VISIBILITY_PRESET": {
-				"type": "STRING",
-				"value": "hidden"
-			},
-			"CMAKE_VISIBILITY_INLINES_HIDDEN": {
-				"type": "BOOL",
-				"value": true
-			}
-		}
-	},
-    {
-		"name": "mingw64",
-		"displayName": "MinGW64",
-		"hidden": false,
-		"inherits": "mingw",
-		"environment": {
-			"CMAKE_PROGRAM_PATH": "$env{WXWORKDIR}/ninja;$env{MINGW_DIR}/bin;$env{MINGW_DIR}/x86_64-w64-mingw32/bin;$env{MINGW_DIR}/opt/bin",
-			"CFLAGS": "$env{MINGW_CFLAGS} -march=x86-64-v2 -mtune=generic",
-			"CXXFLAGS": "$env{MINGW_CXXFLAGS} -march=x86-64-v2 -mtune=generic"
-		},
 		"cacheVariables": {
 			"wxBUILD_VENDOR": {
 				"type": "STRING",
@@ -137,13 +85,76 @@
 			"wxUSE_SOUND": {
 				"type": "BOOL",
 				"value": false
+			},
+			"CPACK_THREADS": {
+				"type": "STRING",
+				"value": "@PARALLEL_LEVEL@"
+			},
+			"CPACK_ARCHIVE_THREADS": {
+				"type": "STRING",
+				"value": "@PARALLEL_LEVEL@"
+			},
+			"CPACK_PACKAGE_DIRECTORY": {
+				"type": "PATH",
+				"value": "$env{WXWORKDIR}/archive"
 			}
+		}
+	},
+	{
+		"name": "mingw",
+		"hidden": true,
+		"inherits": "base",
+		"environment": {
+			"MINGW_DIR": "@MINGW_DIR@",
+			"CMAKE_COLOR_DIAGNOSTICS": "OFF",
+			"CMAKE_BUILD_PARALLEL_LEVEL": "@PARALLEL_LEVEL@",
+			"MINGW_CFLAGS": "\"-ffile-prefix-map=${fileDir}=./wxWidgets\"",
+			"MINGW_CXXFLAGS": "\"-ffile-prefix-map=${fileDir}=./wxWidgets\""
+		},
+		"cacheVariables": {
+			"CMAKE_CONFIGURATION_TYPES": {
+				"type": "STRING",
+				"value": "Debug;Release"
+			},
+			"CMAKE_C_VISIBILITY_PRESET": {
+				"type": "STRING",
+				"value": "hidden"
+			},
+			"CMAKE_CXX_VISIBILITY_PRESET": {
+				"type": "STRING",
+				"value": "hidden"
+			},
+			"CMAKE_VISIBILITY_INLINES_HIDDEN": {
+				"type": "BOOL",
+				"value": true
+			}
+		}
+	},
+    {
+		"name": "mingw64",
+		"displayName": "MinGW64",
+		"hidden": false,
+		"inherits": ["mingw", "wxwidgets"],
+		"environment": {
+			"CMAKE_PROGRAM_PATH": "$env{WXWORKDIR}/ninja;$env{MINGW_DIR}/bin;$env{MINGW_DIR}/x86_64-w64-mingw32/bin;$env{MINGW_DIR}/opt/bin",
+			"CFLAGS": "$env{MINGW_CFLAGS} -march=x86-64-v2 -mtune=generic",
+			"CXXFLAGS": "$env{MINGW_CXXFLAGS} -march=x86-64-v2 -mtune=generic"
 		},
 		"generator": "Ninja Multi-Config",
 		"toolchainFile": "$env{MINGW_DIR}/mingw-toolchain.cmake",
-		"binaryDir": "../build",
-		"installDir": "../install"
-	}
+		"binaryDir": "../build/mingw64",
+		"installDir": "../install/mingw64"
+	},
+    {
+		"name": "msvc",
+		"displayName": "Visual Studio 17 2022 - v143,host=x64",
+		"hidden": false,
+		"inherits": ["base", "wxwidgets"],
+		"generator": "Visual Studio 17 2022",
+		"toolset": "v143,host=x64",
+		"binaryDir": "../build/msvc",
+		"installDir": "../install/msvc"
+	}	
   ],
   "buildPresets": [
     {
@@ -159,6 +170,12 @@
 		"hidden": true,
 		"inherits": "base",
 		"configurePreset": "mingw64"
+	},
+	{
+		"name": "msvc",
+		"hidden": true,
+		"inherits": "base",
+		"configurePreset": "msvc"
 	},
 	{
 		"name": "debug",
@@ -179,6 +196,16 @@
 		"name": "mingw64-debug",
 		"displayName": "MinGW64 Debug",
 		"inherits": ["mingw64", "debug"]
-	}	
+	},
+	{
+		"name": "msvc-release",
+		"displayName": "MSVC Release",
+		"inherits": ["msvc", "release"]
+	},
+	{
+		"name": "msvc-debug",
+		"displayName": "MSVC Debug",
+		"inherits": ["msvc", "debug"]
+	}
   ]
 }

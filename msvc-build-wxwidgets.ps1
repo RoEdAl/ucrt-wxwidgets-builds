@@ -12,20 +12,21 @@ $SourceDir = Join-Path -Path $PSScriptRoot -ChildPath 'src'
 
 # Build directory
 $BuildDir = Join-Path -Path $PSScriptRoot -ChildPath 'build'
+$MsvcBuildDir = Join-Path -Path $BuildDir -ChildPath 'msvc'
 
-if(-Not (Test-Path -Path $BuildDir -PathType Container)) {
+if(-Not (Test-Path -Path $MsvcBuildDir -PathType Container)) {
 	& $CMake -S $SourceDir --preset mingw64
 }
 
 # Build
-$Presets = 'mingw64-debug', 'mingw64-release'
+$Presets = 'msvc-debug', 'msvc-release'
 foreach($preset in $Presets) {
 	$CMakeArgs = @(
 		'--build'
 		'--preset'
 		$preset
 		'--target'
-		'package'
+		'PACKAGE'
 	)
 	$processOptions = @{
 		FilePath = $CMake

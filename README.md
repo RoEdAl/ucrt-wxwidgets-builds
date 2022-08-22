@@ -13,4 +13,5 @@ MinGW [UCRT] based [wxWidgets](http://www.wxwidgets.org/) builds.
 ## Scripts
 
 * `make-workdir.ps1` - download required packages, prepare work directory
-* `build-wxwidgets.ps1` - compile & build packages
+* `mingw-build-wxwidgets.ps1` - *MinGW64* - compile & build packages
+* `msvc-build-wxwidgets.ps1` - *MS Visual Studio 2022* - compile & build packages
