@@ -1,0 +1,79 @@
+From 1cf731d214fbd03ed5a956e87a3cacc1f4e748fc Mon Sep 17 00:00:00 2001
+From: RoEdAl <roed@onet.eu>
+Date: Mon, 22 Aug 2022 11:31:38 +0200
+Subject: [PATCH 5/5] CMake: CPack
+
+---
+ CMakeLists.txt                 |  2 +-
+ build/cmake/cpack-config.cmake | 16 ++++++++++++++++
+ build/cmake/cpack.cmake.in     |  9 +++++++++
+ build/cmake/main.cmake         |  1 +
+ 4 files changed, 27 insertions(+), 1 deletion(-)
+ create mode 100644 build/cmake/cpack-config.cmake
+ create mode 100644 build/cmake/cpack.cmake.in
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 38417d8..67e4516 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -7,7 +7,7 @@
+ # Licence:     wxWindows licence
+ #############################################################################
+ 
+-cmake_minimum_required(VERSION 3.3)
++cmake_minimum_required(VERSION 3.7)
+ 
+ if(NOT CMAKE_CONFIGURATION_TYPES)
+     get_property(HAVE_MULTI_CONFIG_GENERATOR GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+diff --git a/build/cmake/cpack-config.cmake b/build/cmake/cpack-config.cmake
+new file mode 100644
+index 0000000..2f0306c
+--- /dev/null
++++ b/build/cmake/cpack-config.cmake
+@@ -0,0 +1,16 @@
++#
++# cpack-config.cmake
++#
++
++SET(CPACK_STRIP_FILES OFF)
++LIST(APPEND CPACK_GENERATOR 7Z)
++LIST(APPEND CPACK_SOURCE_GENERATOR 7Z)
++SET(CPACK_PACKAGE_CHECKSUM SHA1)
++SET(CPACK_PROJECT_CONFIG_FILE ${CMAKE_BINARY_DIR}/cpack.cmake)
++CONFIGURE_FILE(
++	${CMAKE_SOURCE_DIR}/build/cmake/cpack.cmake.in
++	${CMAKE_BINARY_DIR}/cpack.cmake
++	@ONLY
++)
++
++INCLUDE(CPack)
+diff --git a/build/cmake/cpack.cmake.in b/build/cmake/cpack.cmake.in
+new file mode 100644
+index 0000000..503c1d7
+--- /dev/null
++++ b/build/cmake/cpack.cmake.in
+@@ -0,0 +1,9 @@
++#
++# cpack.cmake
++#
++
++IF(${CPACK_BUILD_CONFIG} STREQUAL Debug)
++	SET(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_NAME}-@wxCOMPILER_PREFIX@-dbg-${CPACK_PACKAGE_VERSION}-${CPACK_SYSTEM_NAME})
++ELSE()
++	SET(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_NAME}-@wxCOMPILER_PREFIX@-${CPACK_PACKAGE_VERSION}-${CPACK_SYSTEM_NAME})
++ENDIF()
+diff --git a/build/cmake/main.cmake b/build/cmake/main.cmake
+index 6e8e869..ca22b28 100644
+--- a/build/cmake/main.cmake
++++ b/build/cmake/main.cmake
+@@ -53,6 +53,7 @@ endif()
+ 
+ # Install target support
+ include(build/cmake/install.cmake)
++include(build/cmake/cpack-config.cmake)
+ 
+ # Determine minimum required OS at runtime
+ set(wxREQUIRED_OS_DESC "${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_PROCESSOR}")
+-- 
+2.36.1.windows.1
+

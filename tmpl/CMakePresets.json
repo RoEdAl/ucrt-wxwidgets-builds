@@ -1,0 +1,184 @@
+{
+  "version": 4,
+  "cmakeMinimumRequired": {"major": 3, "minor": 24, "patch": 0},
+  "configurePresets": [
+    {
+		"name": "base",
+		"hidden": true,
+		"condition": {"type": "equals","lhs": "${hostSystemName}","rhs": "Windows"},
+		"environment": {
+			"WXWORKDIR": "@WX_WORKDIR@",
+			"CMAKE_PROGRAM_PATH": "$env{WXWORKDIR}/ninja"
+		},
+		"cacheVariables": {
+			"CPACK_THREADS": {
+				"type": "STRING",
+				"value": "@PARALLEL_LEVEL@"
+			},
+			"CPACK_ARCHIVE_THREADS": {
+				"type": "STRING",
+				"value": "@PARALLEL_LEVEL@"
+			},
+			"CPACK_PACKAGE_DIRECTORY": {
+				"type": "PATH",
+				"value": "$env{WXWORKDIR}/archive"
+			}
+		}
+	},
+	{
+		"name": "mingw",
+		"hidden": true,
+		"inherits": "base",
+		"environment": {
+			"MINGW_DIR": "@MINGW_DIR@",
+			"CMAKE_COLOR_DIAGNOSTICS": "OFF",
+			"CMAKE_BUILD_PARALLEL_LEVEL": "@PARALLEL_LEVEL@",
+			"MINGW_CFLAGS": "\"-ffile-prefix-map=${fileDir}=./wxWidgets\"",
+			"MINGW_CXXFLAGS": "\"-ffile-prefix-map=${fileDir}=./wxWidgets\""
+		},
+		"cacheVariables": {
+			"CMAKE_CONFIGURATION_TYPES": {
+				"type": "STRING",
+				"value": "Debug;Release"
+			},
+			"CMAKE_C_VISIBILITY_PRESET": {
+				"type": "STRING",
+				"value": "hidden"
+			},
+			"CMAKE_CXX_VISIBILITY_PRESET": {
+				"type": "STRING",
+				"value": "hidden"
+			},
+			"CMAKE_VISIBILITY_INLINES_HIDDEN": {
+				"type": "BOOL",
+				"value": true
+			}
+		}
+	},
+    {
+		"name": "mingw64",
+		"displayName": "MinGW64",
+		"hidden": false,
+		"inherits": "mingw",
+		"environment": {
+			"CMAKE_PROGRAM_PATH": "$env{WXWORKDIR}/ninja;$env{MINGW_DIR}/bin;$env{MINGW_DIR}/x86_64-w64-mingw32/bin;$env{MINGW_DIR}/opt/bin",
+			"CFLAGS": "$env{MINGW_CFLAGS} -march=x86-64-v2 -mtune=generic",
+			"CXXFLAGS": "$env{MINGW_CXXFLAGS} -march=x86-64-v2 -mtune=generic"
+		},
+		"cacheVariables": {
+			"wxBUILD_VENDOR": {
+				"type": "STRING",
+				"value": "ucrt64"
+			},
+			"wxBUILD_STRIPPED_RELEASE": {
+				"type": "BOOL",
+				"value": false
+			},
+			"wxBUILD_COMPATIBILITY": {
+				"type": "STRING",
+				"value": "3.1"
+			},
+			"wxUSE_STL": {
+				"type": "BOOL",
+				"value": true
+			},
+			"wxBUILD_INSTALL": {
+				"type": "BOOL",
+				"value": true
+			},
+			"wxBUILD_CXX_STANDARD": {
+				"type": "STRING",
+				"value": "17"
+			},
+			"wxUSE_REPRODUCIBLE_BUILD": {
+				"type": "BOOL",
+				"value": true
+			},
+			"wxUSE_IPV6": {
+				"type": "BOOL",
+				"value": true
+			},
+			"wxUSE_WINSOCK2": {
+				"type": "BOOL",
+				"value": true
+			},
+			"wxUSE_ON_FATAL_EXCEPTION": {
+				"type": "BOOL",
+				"value": true
+			},
+			"wxUSE_DIALUP_MANAGER": {
+				"type": "BOOL",
+				"value": false
+			},
+			"wxUSE_SPELLCHECK": {
+				"type": "BOOL",
+				"value": false
+			},
+			"wxUSE_MS_HTML_HELP": {
+				"type": "BOOL",
+				"value": false
+			},
+			"wxUSE_XRC": {
+				"type": "BOOL",
+				"value": true
+			},
+			"wxUSE_WEBVIEW_IE": {
+				"type": "BOOL",
+				"value": false
+			},
+			"wxUSE_WEBVIEW_EDGE": {
+				"type": "BOOL",
+				"value": true
+			},
+			"wxUSE_MEDIACTRL": {
+				"type": "BOOL",
+				"value": false
+			},
+			"wxUSE_SOUND": {
+				"type": "BOOL",
+				"value": false
+			}
+		},
+		"generator": "Ninja Multi-Config",
+		"toolchainFile": "$env{MINGW_DIR}/mingw-toolchain.cmake",
+		"binaryDir": "../build",
+		"installDir": "../install"
+	}
+  ],
+  "buildPresets": [
+    {
+		"name": "base",
+		"hidden": true,
+		"condition": {"type": "equals","lhs": "${hostSystemName}","rhs": "Windows"},
+		"inheritConfigureEnvironment": true,
+		"cleanFirst": true,
+		"jobs": @PARALLEL_LEVEL@
+	},
+	{
+		"name": "mingw64",
+		"hidden": true,
+		"inherits": "base",
+		"configurePreset": "mingw64"
+	},
+	{
+		"name": "debug",
+		"hidden": true,
+		"configuration": "Debug"
+	},
+	{
+		"name": "release",
+		"hidden": true,
+		"configuration": "Release"
+	},
+	{
+		"name": "mingw64-release",
+		"displayName": "MinGW64 Release",
+		"inherits": ["mingw64", "release"]
+	},
+	{
+		"name": "mingw64-debug",
+		"displayName": "MinGW64 Debug",
+		"inherits": ["mingw64", "debug"]
+	}	
+  ]
+}

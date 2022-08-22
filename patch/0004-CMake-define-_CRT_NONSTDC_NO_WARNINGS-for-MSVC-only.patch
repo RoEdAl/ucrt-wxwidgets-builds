@@ -1,0 +1,53 @@
+From 212750c10704a59527494be146cdcb2f61185b56 Mon Sep 17 00:00:00 2001
+From: RoEdAl <roed@onet.eu>
+Date: Mon, 22 Aug 2022 08:50:25 +0200
+Subject: [PATCH 4/5] CMake: define _CRT_NONSTDC_NO_WARNINGS for MSVC only
+
+---
+ build/cmake/lib/png.cmake  | 2 +-
+ build/cmake/lib/tiff.cmake | 2 +-
+ build/cmake/lib/zlib.cmake | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/build/cmake/lib/png.cmake b/build/cmake/lib/png.cmake
+index 13ddab5..599d3f3 100644
+--- a/build/cmake/lib/png.cmake
++++ b/build/cmake/lib/png.cmake
+@@ -41,7 +41,7 @@ if(wxUSE_LIBPNG STREQUAL "builtin")
+             src/png/intel/filter_sse2_intrinsics.c
+             ${PNG_EXTRA_SOURCES}
+     )
+-    if(WIN32)
++    if(WIN32 AND MSVC)
+         # define this to get rid of a warning about using POSIX lfind():
+         # confusingly enough, we do define lfind as _lfind for MSVC but
+         # doing this results in a just more confusing warning, see:
+diff --git a/build/cmake/lib/tiff.cmake b/build/cmake/lib/tiff.cmake
+index f77e528..0a92ee9 100644
+--- a/build/cmake/lib/tiff.cmake
++++ b/build/cmake/lib/tiff.cmake
+@@ -59,7 +59,7 @@ if(wxUSE_LIBTIFF STREQUAL "builtin")
+         src/tiff/libtiff/tif_zip.c
+         src/tiff/libtiff/tif_zstd.c
+     )
+-    if(WIN32)
++    if(WIN32 AND MSVC)
+         # define this to get rid of a warning about using POSIX lfind():
+         # confusingly enough, we do define lfind as _lfind for MSVC but
+         # doing this results in a just more confusing warning, see:
+diff --git a/build/cmake/lib/zlib.cmake b/build/cmake/lib/zlib.cmake
+index 1eede10..71b6d42 100644
+--- a/build/cmake/lib/zlib.cmake
++++ b/build/cmake/lib/zlib.cmake
+@@ -27,7 +27,7 @@ if(wxUSE_ZLIB STREQUAL "builtin")
+         src/zlib/uncompr.c
+         src/zlib/zutil.c
+     )
+-    if(WIN32)
++    if(WIN32 AND MSVC)
+         # Define this to get rid of many warnings about using open(),
+         # read() and other POSIX functions in zlib code. This is much
+         # more convenient than having to modify it to avoid them.
+-- 
+2.36.1.windows.1
+

@@ -1,0 +1,27 @@
+From 014ed4c27672df2d72c9b5d2f7588b95173628d1 Mon Sep 17 00:00:00 2001
+From: RoEdAl <roed@onet.eu>
+Date: Sun, 21 Aug 2022 19:02:01 +0200
+Subject: [PATCH 1/5] CMake: install builtin libraries
+
+---
+ build/cmake/functions.cmake | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/build/cmake/functions.cmake b/build/cmake/functions.cmake
+index 43c7c18..76f9e81 100644
+--- a/build/cmake/functions.cmake
++++ b/build/cmake/functions.cmake
+@@ -555,9 +555,7 @@ function(wx_set_builtin_target_properties target_name)
+     endif()
+ 
+     wx_set_common_target_properties(${target_name} DEFAULT_WARNINGS)
+-    if(NOT wxBUILD_SHARED)
+-        wx_install(TARGETS ${name} EXPORT wxWidgetsTargets ARCHIVE DESTINATION "lib${GEN_EXPR_DIR}${wxPLATFORM_LIB_DIR}")
+-    endif()
++    wx_install(TARGETS ${name} EXPORT wxWidgetsTargets ARCHIVE DESTINATION "lib${GEN_EXPR_DIR}${wxPLATFORM_LIB_DIR}")
+ endfunction()
+ 
+ # Add a third party builtin library
+-- 
+2.36.1.windows.1
+

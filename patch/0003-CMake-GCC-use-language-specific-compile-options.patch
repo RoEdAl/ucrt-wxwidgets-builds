@@ -1,0 +1,41 @@
+From f3f728b43d36fd7a9182f28c58001c001f91cc2f Mon Sep 17 00:00:00 2001
+From: RoEdAl <roed@onet.eu>
+Date: Sun, 21 Aug 2022 19:52:32 +0200
+Subject: [PATCH 3/5] CMake: GCC: use language-specific compile options
+
+---
+ CMakeLists.txt              | 2 +-
+ build/cmake/functions.cmake | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a49ecd3..38417d8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -7,7 +7,7 @@
+ # Licence:     wxWindows licence
+ #############################################################################
+ 
+-cmake_minimum_required(VERSION 3.0)
++cmake_minimum_required(VERSION 3.3)
+ 
+ if(NOT CMAKE_CONFIGURATION_TYPES)
+     get_property(HAVE_MULTI_CONFIG_GENERATOR GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+diff --git a/build/cmake/functions.cmake b/build/cmake/functions.cmake
+index 76f9e81..0160d40 100644
+--- a/build/cmake/functions.cmake
++++ b/build/cmake/functions.cmake
+@@ -113,8 +113,8 @@ function(wx_set_common_target_properties target_name)
+ 
+     set(common_gcc_clang_compile_options
+         -Wall
+-        -Wno-ctor-dtor-privacy
+-        -Woverloaded-virtual
++		$<$<COMPILE_LANGUAGE:CXX>:-Wno-ctor-dtor-privacy>
++        $<$<COMPILE_LANGUAGE:CXX>:-Woverloaded-virtual>
+         -Wundef
+         -Wunused-parameter
+     )
+-- 
+2.36.1.windows.1
+
