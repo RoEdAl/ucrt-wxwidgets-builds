@@ -137,8 +137,8 @@
 		"inherits": ["mingw", "wxwidgets"],
 		"environment": {
 			"CMAKE_PROGRAM_PATH": "$env{WXWORKDIR}/ninja;$env{MINGW_DIR}/bin;$env{MINGW_DIR}/x86_64-w64-mingw32/bin;$env{MINGW_DIR}/opt/bin",
-			"CFLAGS": "$env{MINGW_CFLAGS} -march=x86-64-v2 -mtune=generic",
-			"CXXFLAGS": "$env{MINGW_CXXFLAGS} -march=x86-64-v2 -mtune=generic"
+			"CFLAGS": "$env{MINGW_CFLAGS} -march=x86-64 -mtune=generic",
+			"CXXFLAGS": "$env{MINGW_CXXFLAGS} -march=x86-64 -mtune=generic"
 		},
 		"generator": "Ninja Multi-Config",
 		"toolchainFile": "$env{MINGW_DIR}/mingw-toolchain.cmake",
@@ -147,21 +147,11 @@
 	},
     {
 		"name": "msvc",
-		"displayName": "Visual Studio 17 2022 - v143,host=x64",
+		"displayName": "@MSVC_GENERATOR@ - @MSVC_TOOLSET@",
 		"hidden": false,
 		"inherits": ["base", "wxwidgets"],
-		"cacheVariables": {
-			"CMAKE_C_FLAGS_INIT": {
-				"type": "STRING",
-				"value": "/arch:AVX"
-			},
-			"CMAKE_CXX_FLAGS_INIT": {
-				"type": "STRING",
-				"value": "/arch:AVX"
-			}
-		},
-		"generator": "Visual Studio 17 2022",
-		"toolset": "v143,host=x64",
+		"generator": "@MSVC_GENERATOR@",
+		"toolset": "@MSVC_TOOLSET@",
 		"binaryDir": "../build/msvc",
 		"installDir": "../install/msvc"
 	}	
