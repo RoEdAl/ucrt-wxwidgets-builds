@@ -1,7 +1,7 @@
-From 014ed4c27672df2d72c9b5d2f7588b95173628d1 Mon Sep 17 00:00:00 2001
+From 2cc1b9ec723e943beaa629d934d19c872c5fb110 Mon Sep 17 00:00:00 2001
 From: RoEdAl <roed@onet.eu>
 Date: Sun, 21 Aug 2022 19:02:01 +0200
-Subject: [PATCH 1/5] CMake: install builtin libraries
+Subject: [PATCH 1/6] CMake: install builtin libraries
 
 ---
  build/cmake/functions.cmake | 4 +---

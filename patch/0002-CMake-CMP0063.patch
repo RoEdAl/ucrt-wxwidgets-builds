@@ -1,7 +1,7 @@
-From 7d622c17ac705811d01bd214d460a106939e9e69 Mon Sep 17 00:00:00 2001
+From 79e1e09e3fe0e2e986cb882b21edbf38c3eed5d1 Mon Sep 17 00:00:00 2001
 From: RoEdAl <roed@onet.eu>
 Date: Sun, 21 Aug 2022 19:37:17 +0200
-Subject: [PATCH 2/5] CMake: CMP0063
+Subject: [PATCH 2/6] CMake: CMP0063
 
 ---
  build/cmake/policies.cmake | 5 +++++

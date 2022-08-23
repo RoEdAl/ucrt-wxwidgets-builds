@@ -1,0 +1,37 @@
+From 768c2566c812d430d26f00f4db6ba1f97a0db778 Mon Sep 17 00:00:00 2001
+From: RoEdAl <roed@onet.eu>
+Date: Tue, 23 Aug 2022 10:41:06 +0200
+Subject: [PATCH 6/6] CMake: install PDB files
+
+---
+ build/cmake/functions.cmake | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/build/cmake/functions.cmake b/build/cmake/functions.cmake
+index 0160d40..a68f3b2 100644
+--- a/build/cmake/functions.cmake
++++ b/build/cmake/functions.cmake
+@@ -436,7 +436,10 @@ macro(wx_add_library name)
+             RUNTIME DESTINATION "${runtime_dir}${GEN_EXPR_DIR}${wxPLATFORM_LIB_DIR}"
+             BUNDLE DESTINATION Applications/wxWidgets
+             )
+-        wx_target_enable_precomp(${name} "${wxSOURCE_DIR}/include/wx/wxprec.h")
++		IF(wxBUILD_SHARED AND MSVC)
++			wx_install(FILES $<TARGET_PDB_FILE:${name}> DESTINATION "lib${GEN_EXPR_DIR}${wxPLATFORM_LIB_DIR}")
++		ENDIF()
++		wx_target_enable_precomp(${name} "${wxSOURCE_DIR}/include/wx/wxprec.h")
+     endif()
+ endmacro()
+ 
+@@ -555,7 +558,7 @@ function(wx_set_builtin_target_properties target_name)
+     endif()
+ 
+     wx_set_common_target_properties(${target_name} DEFAULT_WARNINGS)
+-    wx_install(TARGETS ${name} EXPORT wxWidgetsTargets ARCHIVE DESTINATION "lib${GEN_EXPR_DIR}${wxPLATFORM_LIB_DIR}")
++    wx_install(TARGETS ${target_name} EXPORT wxWidgetsTargets ARCHIVE DESTINATION "lib${GEN_EXPR_DIR}${wxPLATFORM_LIB_DIR}")
+ endfunction()
+ 
+ # Add a third party builtin library
+-- 
+2.36.1.windows.1
+

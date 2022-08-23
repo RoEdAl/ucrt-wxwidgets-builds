@@ -55,6 +55,7 @@ IF(NOT EXISTS ${WX_TEST_FILE})
 		0003-CMake-GCC-use-language-specific-compile-options.patch
 		0004-CMake-define-_CRT_NONSTDC_NO_WARNINGS-for-MSVC-only.patch
 		0005-CMake-CPack.patch
+		0006-CMake-install-PDB-files.patch
 	)
 	FOREACH(P IN LISTS PATCH_SET)
 		ApplyPatch(${WX_WORKDIR}/patch/${P} ${WX_SRC_DIR})
