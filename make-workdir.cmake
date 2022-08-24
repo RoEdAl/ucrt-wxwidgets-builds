@@ -36,12 +36,12 @@ DownloadPkgSha1(${URL_WXWIDGETS} wxWidgets-${WXWIDGETS_VERSION}.7z 14b14fc4c5f19
 SET(URL_NINJA "http://github.com/ninja-build/ninja/releases/download/v1.11.0")
 DownloadPkgSha1(${URL_NINJA} ninja-win.zip 31c7b577d3e5be57eb8acca527f73a484ace7d8c "Ninja builder")
 
-SET(URL_MINGW64 "https://github.com/RoEdAl/ucrt-mingw-builds/releases/download/v12.1.0-v10-ucrt1")
-DownloadPkgSha1(${URL_MINGW64} x86_64-12.1.0-release-win32-seh-rt_v10-rev0.7z c0828ab2283ad4809bf474c594e0721e61c4c77c "MinGW64 runtime")
+SET(URL_MINGW64 "https://github.com/RoEdAl/ucrt-mingw-builds/releases/download/v12.2.0-v10-ucrt1")
+DownloadPkgSha1(${URL_MINGW64} x86_64-12.2.0-release-win32-seh-rt_v10-rev0.7z cc8ca5fb3c993ad09feb2f2065f497b200560392 "MinGW64 runtime")
 	
-SET(URL_GCC "http://gcc.gnu.org/onlinedocs/gcc-12.1.0")
-DownloadPkgSha1(${URL_GCC} gcc.pdf 366da27b705374d4f07b508bdc642b6c5d5b4ca7 "GCC documentation - PDF")
-DownloadPkgSha1(${URL_GCC} gcc-html.tar.gz 8fc02ede5b52e8abe4b67a6884e19a62899d809e "GCC documentation - HTML")
+SET(URL_GCC "http://gcc.gnu.org/onlinedocs/gcc-12.2.0")
+DownloadPkgSha1(${URL_GCC} gcc.pdf becbd022de78a4f818d53d3229a19f9edb03f88e "GCC documentation - PDF")
+DownloadPkgSha1(${URL_GCC} gcc-html.tar.gz e3ef867a3803961b01fbd57e7c5d19bc36757573 "GCC documentation - HTML")
 
 # extracting
 
@@ -73,7 +73,7 @@ ENDIF()
 CMAKE_PATH(APPEND WX_WORKDIR mingw64 OUTPUT_VARIABLE MINGW_DIR)
 IF(NOT EXISTS ${MINGW_DIR})
 	MESSAGE(STATUS "[EXTR] MinGW64 runtime")
-	FILE(ARCHIVE_EXTRACT INPUT ${WX_DLDIR}/x86_64-12.1.0-release-win32-seh-rt_v10-rev0.7z DESTINATION ${WX_WORKDIR})
+	FILE(ARCHIVE_EXTRACT INPUT ${WX_DLDIR}/x86_64-12.2.0-release-win32-seh-rt_v10-rev0.7z DESTINATION ${WX_WORKDIR})
 ENDIF()
 	
 CMAKE_PATH(APPEND MINGW_DIR doc OUTPUT_VARIABLE MINGW_DOC_DIR)
