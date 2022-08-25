@@ -9,9 +9,9 @@ function git_status {
 	
 	try {
 		Push-Location -Path $RepoDir
-		$res = & $git status --porcelain
+		$res = & $Git status --porcelain
 		if ( $? ) {
-			return $res.replace("\s+",'').Length -eq 0
+			return [string]::IsNullOrWhiteSpace($res)
 		} else {
 			Write-Error 'Fail to execute git status' -ErrorAction Stop
 		}
@@ -28,7 +28,7 @@ function git_last_commit_ts {
 	
 	try {
 		Push-Location -Path $RepoDir
-		$res = & $git log -n 1 '--pretty=format:%ct'
+		$res = & $Git log -n 1 '--pretty=format:%ct'
 		if ( $? ) {
 			return [int]::Parse($res.replace("\s+",''))
 		} else {
