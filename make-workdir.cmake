@@ -37,7 +37,7 @@ SET(URL_NINJA "http://github.com/ninja-build/ninja/releases/download/v1.11.0")
 DownloadPkgSha1(${URL_NINJA} ninja-win.zip 31c7b577d3e5be57eb8acca527f73a484ace7d8c "Ninja builder")
 
 SET(URL_MINGW64 "https://github.com/RoEdAl/ucrt-mingw-builds/releases/download/v12.2.0-rt10-ucrt1")
-DownloadPkgSha1(${URL_MINGW64} x86_64-12.2.0-release-win32-seh-rt_v10-rev0.7z a5d6627688db5423ce68508588f476e0977ac619 "MinGW64 runtime")
+DownloadPkgSha1(${URL_MINGW64} x86_64-12.2.0-release-win32-seh-rt_v10-rev0.7z 7ac51a2536139bf8aa3a14a1a90f125492907589 "MinGW64 runtime")
 	
 SET(URL_GCC "http://gcc.gnu.org/onlinedocs/gcc-12.2.0")
 DownloadPkgSha1(${URL_GCC} gcc.pdf becbd022de78a4f818d53d3229a19f9edb03f88e "GCC documentation - PDF")
