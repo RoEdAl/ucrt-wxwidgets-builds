@@ -2,20 +2,34 @@
 # msvc-build-wxwidgets.ps1
 #
 
-# CMake
-$CMakeDir = Join-Path -Path $Env:ProgramFiles -ChildPath 'CMake'
-$CMakeBinDir = Join-Path -Path $CMakeDir -ChildPath 'bin'
-$CMake = Join-Path -Path $CMakeBinDir -ChildPath 'cmake'
+$ScriptsPath = Join-Path -Path $PSScriptRoot -ChildPath 'scripts'
+$CMakeScript = Join-Path -Path $ScriptsPath -ChildPath 'cmake.ps1'
+$GitScript = Join-Path -Path $ScriptsPath -ChildPath 'git.ps1'
+
+. $CMakeScript
+. $GitScript
 
 # Source directory
 $SourceDir = Join-Path -Path $PSScriptRoot -ChildPath 'src'
+
+if ( -Not (git_status $SourceDir) ) {
+	Write-Error 'There are uncommited changes' -ErrorAction Stop
+}
+
+$gts = git_last_commit_ts $SourceDir
+$ts = dt_from_unix_epoch $gts
+Write-Host "Timestamp: $ts [@$gts]"
+
+$envs = @(
+	"SOURCE_DATE_EPOCH=$gts"
+)
 
 # Build directory
 $BuildDir = Join-Path -Path $PSScriptRoot -ChildPath 'build'
 $MsvcBuildDir = Join-Path -Path $BuildDir -ChildPath 'msvc'
 
 if(-Not (Test-Path -Path $MsvcBuildDir -PathType Container)) {
-	& $CMake -S $SourceDir --preset msvc
+	& $CMake -E env @envs $CMake -S $SourceDir --preset msvc
 	if ( -Not $? ) {
 		exit
 	}
@@ -26,7 +40,7 @@ $Presets = 'msvc-debug', 'msvc-release'
 foreach($preset in $Presets) {
 	try {
 		Push-Location -Path $SourceDir
-		& $CMake --build --preset $preset --target 'PACKAGE'
+		& $CMake -E env @envs $CMake --build --preset $preset --target 'PACKAGE'
 		if ( -Not $? ) {
 			exit
 		}

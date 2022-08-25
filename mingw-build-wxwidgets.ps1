@@ -2,67 +2,12 @@
 # mingw-build-wxwidgets.ps1
 #
 
-function git_status {
-	param (
-		$RepoDir
-	)
-	
-	try {
-		Push-Location -Path $RepoDir
-		$res = & $Git status --porcelain
-		if ( $? ) {
-			return [string]::IsNullOrWhiteSpace($res)
-		} else {
-			Write-Error 'Fail to execute git status' -ErrorAction Stop
-		}
-	}
-	finally {
-		Pop-Location
-	}
-}
+$ScriptsPath = Join-Path -Path $PSScriptRoot -ChildPath 'scripts'
+$CMakeScript = Join-Path -Path $ScriptsPath -ChildPath 'cmake.ps1'
+$GitScript = Join-Path -Path $ScriptsPath -ChildPath 'git.ps1'
 
-function git_last_commit_ts {
-	param (
-		$RepoDir
-	)
-	
-	try {
-		Push-Location -Path $RepoDir
-		$res = & $Git log -n 1 '--pretty=format:%ct'
-		if ( $? ) {
-			return [int]::Parse($res.replace("\s+",''))
-		} else {
-			Write-Error 'Fail to execute git log' -ErrorAction Stop
-		}
-	}
-	finally {
-		Pop-Location
-	}	
-}
-
-function dt_from_unix_epoch {
-	param (
-		$UnixEpoch
-	)
-	
-	$args = @(1970, 1, 1, 0, 0, 0, [DateTimeKind]::Utc)
-	$params = @{
-		TypeName = 'System.DateTime'
-		ArgumentList = $args
-	}
-	$res = New-Object @params
-    return $res.AddSeconds( $UnixEpoch )
-}
-
-# CMake
-$CMakeDir = Join-Path -Path $Env:ProgramFiles -ChildPath 'CMake'
-$CMakeBinDir = Join-Path -Path $CMakeDir -ChildPath 'bin'
-$CMake = Join-Path -Path $CMakeBinDir -ChildPath 'cmake'
-
-# git
-$GitDir = Join-Path -Path $Env:ProgramFiles -ChildPath 'git'
-$GitBinDir = Join-Path -Path $GitDir -ChildPath 'bin'
-$Git = Join-Path -Path $GitBinDir -ChildPath 'git'
+. $CMakeScript
+. $GitScript
 
 # Source directory
 $SourceDir = Join-Path -Path $PSScriptRoot -ChildPath 'src'
