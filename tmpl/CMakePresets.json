@@ -108,8 +108,8 @@
 			"MINGW_DIR": "@MINGW_DIR@",
 			"CMAKE_COLOR_DIAGNOSTICS": "OFF",
 			"CMAKE_BUILD_PARALLEL_LEVEL": "@PARALLEL_LEVEL@",
-			"MINGW_CFLAGS": "\"-ffile-prefix-map=${fileDir}=./wxWidgets\"",
-			"MINGW_CXXFLAGS": "\"-ffile-prefix-map=${fileDir}=./wxWidgets\""
+			"CFLAGS": "\"-ffile-prefix-map=${fileDir}=./wxWidgets\"",
+			"CXXFLAGS": "\"-ffile-prefix-map=${fileDir}=./wxWidgets\""
 		},
 		"cacheVariables": {
 			"CMAKE_CONFIGURATION_TYPES": {
@@ -136,9 +136,7 @@
 		"hidden": false,
 		"inherits": ["mingw", "wxwidgets"],
 		"environment": {
-			"CMAKE_PROGRAM_PATH": "$env{WXWORKDIR}/ninja;$env{MINGW_DIR}/bin;$env{MINGW_DIR}/x86_64-w64-mingw32/bin;$env{MINGW_DIR}/opt/bin",
-			"CFLAGS": "$env{MINGW_CFLAGS} -march=x86-64 -mtune=generic",
-			"CXXFLAGS": "$env{MINGW_CXXFLAGS} -march=x86-64 -mtune=generic"
+			"CMAKE_PROGRAM_PATH": "$env{WXWORKDIR}/ninja;$env{MINGW_DIR}/bin;$env{MINGW_DIR}/x86_64-w64-mingw32/bin;$env{MINGW_DIR}/opt/bin"
 		},
 		"generator": "Ninja Multi-Config",
 		"toolchainFile": "$env{MINGW_DIR}/mingw-toolchain.cmake",

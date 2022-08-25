@@ -36,7 +36,7 @@ DownloadPkgSha1(${URL_WXWIDGETS} wxWidgets-${WXWIDGETS_VERSION}.7z 14b14fc4c5f19
 SET(URL_NINJA "http://github.com/ninja-build/ninja/releases/download/v1.11.0")
 DownloadPkgSha1(${URL_NINJA} ninja-win.zip 31c7b577d3e5be57eb8acca527f73a484ace7d8c "Ninja builder")
 
-SET(URL_MINGW64 "https://github.com/RoEdAl/ucrt-mingw-builds/releases/download/v12.2.0-v10-ucrt1")
+SET(URL_MINGW64 "https://github.com/RoEdAl/ucrt-mingw-builds/releases/download/v12.2.0-rt10-ucrt1")
 DownloadPkgSha1(${URL_MINGW64} x86_64-12.2.0-release-win32-seh-rt_v10-rev0.7z cc8ca5fb3c993ad09feb2f2065f497b200560392 "MinGW64 runtime")
 	
 SET(URL_GCC "http://gcc.gnu.org/onlinedocs/gcc-12.2.0")
