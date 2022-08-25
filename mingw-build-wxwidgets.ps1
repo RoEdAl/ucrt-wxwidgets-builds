@@ -68,7 +68,7 @@ $Git = Join-Path -Path $GitBinDir -ChildPath 'git'
 $SourceDir = Join-Path -Path $PSScriptRoot -ChildPath 'src'
 
 if ( -Not (git_status $SourceDir) ) {
-	# Write-Error 'There are uncommited changes' -ErrorAction Stop
+	Write-Error 'There are uncommited changes' -ErrorAction Stop
 }
 
 $gts = git_last_commit_ts $SourceDir
