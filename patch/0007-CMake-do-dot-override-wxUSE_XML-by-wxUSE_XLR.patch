@@ -1,0 +1,38 @@
+From 7291c8d95853e6362a70b5344d97fab125e0927d Mon Sep 17 00:00:00 2001
+From: RoEdAl <roed@onet.eu>
+Date: Fri, 26 Aug 2022 14:48:43 +0200
+Subject: [PATCH 7/7] CMake: do dot override wxUSE_XML by wxUSE_XLR
+
+---
+ build/cmake/init.cmake    | 1 -
+ build/cmake/options.cmake | 2 +-
+ 2 files changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/build/cmake/init.cmake b/build/cmake/init.cmake
+index 3ff14ab..5bd3f34 100644
+--- a/build/cmake/init.cmake
++++ b/build/cmake/init.cmake
+@@ -199,7 +199,6 @@ set(wxUSE_STD_DEFAULT ON)
+ if(NOT wxUSE_EXPAT)
+     set(wxUSE_XRC OFF)
+ endif()
+-set(wxUSE_XML ${wxUSE_XRC})
+ 
+ if(DEFINED wxUSE_OLE AND wxUSE_OLE)
+     set(wxUSE_OLE_AUTOMATION ON)
+diff --git a/build/cmake/options.cmake b/build/cmake/options.cmake
+index 49c536a..cb94028 100644
+--- a/build/cmake/options.cmake
++++ b/build/cmake/options.cmake
+@@ -253,7 +253,7 @@ wx_option(wxUSE_MS_HTML_HELP "use MS HTML Help (win32)")
+ wx_option(wxUSE_HTML "use wxHTML sub-library")
+ wx_option(wxUSE_WXHTML_HELP "use wxHTML-based help")
+ wx_option(wxUSE_XRC "use XRC resources sub-library")
+-wx_option(wxUSE_XML "use the xml library (overruled by wxUSE_XRC)")
++wx_option(wxUSE_XML "use the xml library")
+ wx_option(wxUSE_AUI "use AUI docking library")
+ wx_option(wxUSE_PROPGRID "use wxPropertyGrid library")
+ wx_option(wxUSE_RIBBON "use wxRibbon library")
+-- 
+2.36.1.windows.1
+
