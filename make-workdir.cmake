@@ -59,6 +59,7 @@ IF(NOT EXISTS ${WX_TEST_FILE})
 		0005-CMake-CPack.patch
 		0006-CMake-install-PDB-files.patch
 		0007-CMake-do-dot-override-wxUSE_XML-by-wxUSE_XLR.patch
+		0008-CMake-CMP0069.patch
 	)
 	FOREACH(P IN LISTS PATCH_SET)
 		ApplyPatch(${WX_WORKDIR}/patch/${P} ${WX_SRC_DIR})

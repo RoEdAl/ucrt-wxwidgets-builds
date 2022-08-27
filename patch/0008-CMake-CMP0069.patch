@@ -1,0 +1,28 @@
+From 19644b9df52021695f9b91aa937252108c236b19 Mon Sep 17 00:00:00 2001
+From: RoEdAl <roed@onet.eu>
+Date: Sat, 27 Aug 2022 08:01:09 +0200
+Subject: [PATCH 8/8] CMake: CMP0069
+
+---
+ build/cmake/policies.cmake | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/build/cmake/policies.cmake b/build/cmake/policies.cmake
+index 87b2790..9235013 100644
+--- a/build/cmake/policies.cmake
++++ b/build/cmake/policies.cmake
+@@ -74,6 +74,11 @@ if(POLICY CMP0067)
+     cmake_policy(SET CMP0067 NEW)
+ endif()
+ 
++if(POLICY CMP0069)
++    # INTERPROCEDURAL_OPTIMIZATION is enforced when enabled.
++    cmake_policy(SET CMP0069 NEW)
++endif()
++
+ if(POLICY CMP0072)
+     # FindOpenGL prefers GLVND by default when available.
+     cmake_policy(SET CMP0072 NEW)
+-- 
+2.36.1.windows.1
+

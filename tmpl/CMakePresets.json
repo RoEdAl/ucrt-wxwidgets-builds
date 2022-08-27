@@ -1,6 +1,6 @@
 {
   "version": 4,
-  "cmakeMinimumRequired": {"major": 3, "minor": 24, "patch": 0},
+  "cmakeMinimumRequired": {"major": 3, "minor": 24, "patch": 1},
   "configurePresets": [
     {
 		"name": "base",
@@ -105,6 +105,20 @@
 		}
 	},
 	{
+		"name": "interproceduralOptimization",
+		"hidden": true,
+		"cacheVariables": {
+			"CMAKE_INTERPROCEDURAL_OPTIMIZATION_DEBUG": {
+				"type": "BOOL",
+				"value": false
+			},
+			"CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE": {
+				"type": "BOOL",
+				"value": true
+			}
+		}
+	},
+	{
 		"name": "mingw",
 		"hidden": true,
 		"inherits": "base",
@@ -138,7 +152,7 @@
 		"name": "mingw64",
 		"displayName": "MinGW64",
 		"hidden": false,
-		"inherits": ["mingw", "wxwidgets"],
+		"inherits": ["mingw", "wxwidgets", "interproceduralOptimization"],
 		"environment": {
 			"CMAKE_PROGRAM_PATH": "$env{WXWORKDIR}/ninja;$env{MINGW_DIR}/bin;$env{MINGW_DIR}/x86_64-w64-mingw32/bin;$env{MINGW_DIR}/opt/bin",
 			"CFLAGS": "$env{MINGW_CFLAGS} -march=x86-64-v2",
@@ -153,7 +167,7 @@
 		"name": "msvc",
 		"displayName": "@MSVC_GENERATOR@ - @MSVC_TOOLSET@",
 		"hidden": false,
-		"inherits": ["base", "wxwidgets"],
+		"inherits": ["base", "wxwidgets", "interproceduralOptimization"],
 		"generator": "@MSVC_GENERATOR@",
 		"toolset": "@MSVC_TOOLSET@",
 		"binaryDir": "../build/msvc",
