@@ -1,7 +1,7 @@
 From 48e84c7e39b682286be1f1b23e054f7907418cc6 Mon Sep 17 00:00:00 2001
 From: RoEdAl <roed@onet.eu>
 Date: Tue, 23 Aug 2022 10:41:06 +0200
-Subject: [PATCH 6/8] CMake: install PDB files
+Subject: [PATCH 6/9] CMake: install PDB files
 
 ---
  build/cmake/functions.cmake | 7 +++++--

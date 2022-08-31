@@ -8,7 +8,7 @@ FUNCTION(RemoveLastChar Str)
 	SET(WX_WORKDIR ${StrTrimmed} PARENT_SCOPE)
 ENDFUNCTION()
 
-FUNCTION(DownloadPkgSha1 UrlBase FileName Sha1Hash StatusMsg)
+FUNCTION(DownloadPkgSha1Ex UrlBase FileName Sha1Hash StatusMsg FullUrl)
 	CMAKE_PATH(APPEND WX_DLDIR ${FileName} OUTPUT_VARIABLE PkgPath)
 	
 	IF(EXISTS ${PkgPath})
@@ -24,10 +24,20 @@ FUNCTION(DownloadPkgSha1 UrlBase FileName Sha1Hash StatusMsg)
 	ENDIF()
 	
 	MESSAGE(STATUS "[DL] ${StatusMsg}")
-	MESSAGE(VERBOSE "[DL] ${UrlBase}/${FileName}")
-	FILE(DOWNLOAD ${UrlBase}/${FileName} ${PkgPath}
+	IF(FullUrl)
+		SET(FILE_URL ${UrlBase})
+	ELSE()
+		SET(FILE_URL ${UrlBase}/${FileName})
+	ENDIF()
+	MESSAGE(VERBOSE "[DL] ${FILE_URL}")
+	FILE(DOWNLOAD ${FILE_URL} ${PkgPath}
 		EXPECTED_HASH SHA1=${Sha1Hash}
 		INACTIVITY_TIMEOUT 60
 		TIMEOUT 300
 	)
 ENDFUNCTION()
+
+FUNCTION(DownloadPkgSha1 UrlBase FileName Sha1Hash StatusMsg)
+	DownloadPkgSha1Ex(${UrlBase} ${FileName} ${Sha1Hash} ${StatusMsg} FALSE)
+ENDFUNCTION()
+

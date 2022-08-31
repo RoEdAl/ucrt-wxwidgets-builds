@@ -11,6 +11,7 @@ INCLUDE(scripts/patch.cmake)
 
 ProcessorCount(PARALLEL_LEVEL)
 SET(WXWIDGETS_VERSION "3.2.0")
+SET(WEBVIEW2_VERSION "1.0.1293.44")
 SET(WX_WORKDIR ${CMAKE_SOURCE_DIR})
 CMAKE_PATH(ABSOLUTE_PATH WX_WORKDIR NORMALIZE)
 #RemoveLastChar(${WX_WORKDIR})
@@ -43,6 +44,9 @@ SET(URL_GCC "http://gcc.gnu.org/onlinedocs/gcc-12.2.0")
 DownloadPkgSha1(${URL_GCC} gcc.pdf becbd022de78a4f818d53d3229a19f9edb03f88e "GCC documentation - PDF")
 DownloadPkgSha1(${URL_GCC} gcc-html.tar.gz e3ef867a3803961b01fbd57e7c5d19bc36757573 "GCC documentation - HTML")
 
+SET(URL_WEBVIEW2 "https://www.nuget.org/api/v2/package/Microsoft.Web.WebView2")
+DownloadPkgSha1Ex(${URL_WEBVIEW2}/${WEBVIEW2_VERSION} microsoft.web.webview2.${WEBVIEW2_VERSION}.nupkg 6cf1655775e6fda4b731bde781212e0d370987ad "WebView2" TRUE)
+
 # extracting
 
 CMAKE_PATH(APPEND WX_WORKDIR src OUTPUT_VARIABLE WX_SRC_DIR)
@@ -60,10 +64,17 @@ IF(NOT EXISTS ${WX_TEST_FILE})
 		0006-CMake-install-PDB-files.patch
 		0007-CMake-do-dot-override-wxUSE_XML-by-wxUSE_XLR.patch
 		0008-CMake-CMP0069.patch
+		0009-wxWebViewEdge-handle-more-error-codes.patch
 	)
 	FOREACH(P IN LISTS PATCH_SET)
 		ApplyPatch(${WX_WORKDIR}/patch/${P} ${WX_SRC_DIR})
 	ENDFOREACH()
+ENDIF()
+
+CMAKE_PATH(APPEND WX_SRC_DIR 3rdparty webview2 OUTPUT_VARIABLE WEBVIEW2_DIR)
+IF(NOT EXISTS ${WEBVIEW2_DIR})
+	MESSAGE(STATUS "[EXTR] WebView2")
+	FILE(ARCHIVE_EXTRACT INPUT ${WX_DLDIR}/microsoft.web.webview2.${WEBVIEW2_VERSION}.nupkg DESTINATION ${WEBVIEW2_DIR})
 ENDIF()
 
 CMAKE_PATH(APPEND WX_WORKDIR ninja ninja.exe OUTPUT_VARIABLE NINJA_BINARY)
