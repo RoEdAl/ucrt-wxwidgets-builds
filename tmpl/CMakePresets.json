@@ -126,8 +126,8 @@
 			"MINGW_DIR": "@MINGW_DIR@",
 			"CMAKE_COLOR_DIAGNOSTICS": "OFF",
 			"CMAKE_BUILD_PARALLEL_LEVEL": "@PARALLEL_LEVEL@",
-			"MINGW_CFLAGS": "\"-ffile-prefix-map=${fileDir}=./wxWidgets\"",
-			"MINGW_CXXFLAGS": "\"-ffile-prefix-map=${fileDir}=./wxWidgets\""
+			"MINGW_CFLAGS": "\"-ffile-prefix-map=${fileDir}=./wxWidgets\" -D_CRT_RAND_S",
+			"MINGW_CXXFLAGS": "\"-ffile-prefix-map=${fileDir}=./wxWidgets\" -D_CRT_RAND_S"
 		},
 		"cacheVariables": {
 			"CMAKE_CONFIGURATION_TYPES": {
