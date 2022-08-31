@@ -1,0 +1,24 @@
+From b439cb43ec70a0bc14b102b7578f7531aa4c1891 Mon Sep 17 00:00:00 2001
+From: RoEdAl <roed@onet.eu>
+Date: Wed, 31 Aug 2022 11:14:45 +0200
+Subject: [PATCH 10/10] CMake: wxwebview: define _CONTROL_FLOW_GUARD_XFG
+
+---
+ build/cmake/lib/webview/CMakeLists.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/build/cmake/lib/webview/CMakeLists.txt b/build/cmake/lib/webview/CMakeLists.txt
+index 085381d..3d35e52 100644
+--- a/build/cmake/lib/webview/CMakeLists.txt
++++ b/build/cmake/lib/webview/CMakeLists.txt
+@@ -83,6 +83,7 @@ elseif(WXMSW)
+             if (NOT wxBUILD_MONOLITHIC)
+                 target_compile_options(wxwebview PRIVATE -Wno-unknown-pragmas)
+             endif()
++			target_compile_definitions(wxwebview PRIVATE _CONTROL_FLOW_GUARD_XFG=0)
+         endif()
+ 
+         if (wxUSE_WEBVIEW_EDGE_STATIC)
+-- 
+2.36.1.windows.1
+

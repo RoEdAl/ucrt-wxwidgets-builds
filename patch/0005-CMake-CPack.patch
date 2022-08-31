@@ -1,7 +1,7 @@
 From 15a9d70a9605097a5150fd85e6ccc2fd9bb379b7 Mon Sep 17 00:00:00 2001
 From: RoEdAl <roed@onet.eu>
 Date: Mon, 22 Aug 2022 11:31:38 +0200
-Subject: [PATCH 5/9] CMake: CPack
+Subject: [PATCH 05/10] CMake: CPack
 
 ---
  CMakeLists.txt                 |  2 +-

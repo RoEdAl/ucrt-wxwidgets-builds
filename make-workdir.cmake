@@ -65,6 +65,7 @@ IF(NOT EXISTS ${WX_TEST_FILE})
 		0007-CMake-do-dot-override-wxUSE_XML-by-wxUSE_XLR.patch
 		0008-CMake-CMP0069.patch
 		0009-wxWebViewEdge-handle-more-error-codes.patch
+		0010-CMake-wxwebview-define-_CONTROL_FLOW_GUARD_XFG.patch
 	)
 	FOREACH(P IN LISTS PATCH_SET)
 		ApplyPatch(${WX_WORKDIR}/patch/${P} ${WX_SRC_DIR})
