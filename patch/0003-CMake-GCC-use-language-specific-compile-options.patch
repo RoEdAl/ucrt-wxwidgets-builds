@@ -1,7 +1,7 @@
 From 2faac23034f6a9bcc65080836262d8c66dcde3c1 Mon Sep 17 00:00:00 2001
 From: RoEdAl <roed@onet.eu>
 Date: Sun, 21 Aug 2022 19:52:32 +0200
-Subject: [PATCH 03/10] CMake: GCC: use language-specific compile options
+Subject: [PATCH 03/11] CMake: GCC: use language-specific compile options
 
 ---
  CMakeLists.txt              | 2 +-

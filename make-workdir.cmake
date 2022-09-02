@@ -55,18 +55,7 @@ CMAKE_PATH(APPEND WX_SRC_DIR include msvc wx setup.h OUTPUT_VARIABLE WX_TEST_FIL
 IF(NOT EXISTS ${WX_TEST_FILE})
 	MESSAGE(STATUS "[EXTR] wxWidgets source")
 	FILE(ARCHIVE_EXTRACT INPUT ${WX_DLDIR}/wxWidgets-${WXWIDGETS_VERSION}.7z DESTINATION ${WX_SRC_DIR})
-	SET(PATCH_SET 
-		0001-CMake-install-builtin-libraries.patch
-		0002-CMake-CMP0063.patch
-		0003-CMake-GCC-use-language-specific-compile-options.patch
-		0004-CMake-define-_CRT_NONSTDC_NO_WARNINGS-for-MSVC-only.patch
-		0005-CMake-CPack.patch
-		0006-CMake-install-PDB-files.patch
-		0007-CMake-do-dot-override-wxUSE_XML-by-wxUSE_XLR.patch
-		0008-CMake-CMP0069.patch
-		0009-wxWebViewEdge-handle-more-error-codes.patch
-		0010-CMake-wxwebview-define-_CONTROL_FLOW_GUARD_XFG.patch
-	)
+	FILE(GLOB PATCH_SET LINK_DIRECTORIES OFF RELATIVE ${WX_WORKDIR}/patch ${WX_WORKDIR}/patch/*.patch)
 	FOREACH(P IN LISTS PATCH_SET)
 		ApplyPatch(${WX_WORKDIR}/patch/${P} ${WX_SRC_DIR})
 	ENDFOREACH()
