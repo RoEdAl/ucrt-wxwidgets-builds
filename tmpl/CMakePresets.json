@@ -159,7 +159,7 @@
 			"CXXFLAGS": "$env{MINGW_CXXFLAGS} -march=x86-64-v2"
 		},
 		"generator": "Ninja Multi-Config",
-		"toolchainFile": "$env{MINGW_DIR}/mingw-toolchain.cmake",
+		"toolchainFile": "$env{MINGW_DIR}/wx-mingw-toolchain.cmake",
 		"binaryDir": "../build/mingw64",
 		"installDir": "../install/mingw64"
 	},
