@@ -1,16 +1,16 @@
-From 47a8af3ade054c597a20f64a2eee1fe51866aa16 Mon Sep 17 00:00:00 2001
+From 00b887de82f3a163fb9562b8438b2d60e2c0cbb8 Mon Sep 17 00:00:00 2001
 From: RoEdAl <roed@onet.eu>
-Date: Fri, 2 Sep 2022 10:20:32 +0200
-Subject: [PATCH 11/11] wxWidgets: allow to bind/unbind const methods
+Date: Mon, 5 Sep 2022 08:49:02 +0200
+Subject: [PATCH 11/11] wxWidgets: allow to use const methods as event handlers
 
 ---
- include/wx/event.h        | 470 ++++++++++++++++++++++++++++++++++----
+ include/wx/event.h        | 505 ++++++++++++++++++++++++++++++++++----
  src/common/webrequest.cpp |   2 +-
  src/msw/ole/access.cpp    |   6 +-
- 3 files changed, 428 insertions(+), 50 deletions(-)
+ 3 files changed, 462 insertions(+), 51 deletions(-)
 
 diff --git a/include/wx/event.h b/include/wx/event.h
-index d05793d..6e4dae4 100644
+index d05793d..354776f 100644
 --- a/include/wx/event.h
 +++ b/include/wx/event.h
 @@ -140,6 +140,24 @@ inline wxEventFunction wxEventFunctionCast(void (wxEvtHandler::*func)(T&))
@@ -79,7 +79,15 @@ index d05793d..6e4dae4 100644
  
  } // namespace wxPrivate
  
-@@ -232,7 +270,7 @@ public:
+@@ -193,7 +231,6 @@ struct EventArgOf<void (C::*)(E&)>
+ #define wxEVENT_HANDLER_CAST( functype, func ) \
+     wxEventFunctionCast(wxEventHandlerNoexceptCast(functype, &func))
+ 
+-
+ // The tag is a type associated to the event type (which is an integer itself,
+ // in spite of its name) value. It exists in order to be used as a template
+ // parameter and provide a mapping between the event type values and their
+@@ -232,7 +269,7 @@ public:
      virtual ~wxEventFunctor();
  
      // Invoke the actual event handler:
@@ -88,7 +96,7 @@ index d05793d..6e4dae4 100644
  
      // this function tests whether this functor is matched, for the purpose of
      // finding it in an event table in Unbind(), by the given functor:
-@@ -262,7 +300,7 @@ public:
+@@ -262,7 +299,7 @@ public:
          : m_handler( handler ), m_method( method )
          { }
  
@@ -97,7 +105,7 @@ index d05793d..6e4dae4 100644
  
      virtual bool IsMatching(const wxEventFunctor& functor) const wxOVERRIDE
      {
-@@ -357,9 +395,14 @@ struct HandlerImpl<T, A, true>
+@@ -357,9 +394,14 @@ struct HandlerImpl<T, A, true>
          { return static_cast<T *>(p); }
      static wxEvtHandler *ConvertToEvtHandler(T *p)
          { return p; }
@@ -112,8 +120,12 @@ index d05793d..6e4dae4 100644
  };
  
  // specialization for handlers not deriving from wxEvtHandler
-@@ -374,6 +417,8 @@ struct HandlerImpl<T, A, false>
+@@ -372,8 +414,12 @@ struct HandlerImpl<T, A, false>
          { return NULL; }
+     static wxEvtHandler *ConvertToEvtHandler(T *)
+         { return NULL; }
++    static wxEvtHandler *ConvertToEvtHandler(const T *)
++        { return NULL; }		
      static wxEventFunction ConvertToEvtMethod(void (T::*)(A&))
          { return NULL; }
 +    static wxEventFunction ConvertToEvtMethod(void (T::*)(A&) const)
@@ -121,7 +133,7 @@ index d05793d..6e4dae4 100644
  };
  
  } // namespace wxPrivate
-@@ -419,7 +464,7 @@ public:
+@@ -419,7 +465,7 @@ public:
          CheckHandlerArgument(static_cast<EventClass *>(NULL));
      }
  
@@ -130,7 +142,7 @@ index d05793d..6e4dae4 100644
      {
          Class * realHandler = m_handler;
          if ( !realHandler )
-@@ -458,8 +503,8 @@ public:
+@@ -458,8 +504,8 @@ public:
          { return this->ConvertToEvtMethod(m_method); }
  
  private:
@@ -141,7 +153,7 @@ index d05793d..6e4dae4 100644
  
      // Provide a dummy default ctor for type info purposes
      wxEventFunctorMethod() { }
-@@ -469,6 +514,86 @@ private:
+@@ -469,6 +515,86 @@ private:
      WX_DECLARE_TYPEINFO_INLINE(thisClass)
  };
  
@@ -228,7 +240,7 @@ index d05793d..6e4dae4 100644
  
  // functor forwarding the event to function (function, static method)
  template <typename EventTag, typename EventArg>
-@@ -490,7 +615,7 @@ public:
+@@ -490,7 +616,7 @@ public:
          CheckHandlerArgument(static_cast<EventClass *>(NULL));
      }
  
@@ -237,7 +249,7 @@ index d05793d..6e4dae4 100644
      {
          // If you get an error here like "must use .* or ->* to call
          // pointer-to-member function" then you probably tried to call
-@@ -535,7 +660,7 @@ public:
+@@ -535,7 +661,7 @@ public:
          : m_handler(handler), m_handlerAddr(&handler)
          { }
  
@@ -246,7 +258,7 @@ index d05793d..6e4dae4 100644
      {
          // If you get an error here like "must use '.*' or '->*' to call
          // pointer-to-member function" then you probably tried to call
-@@ -635,6 +760,29 @@ wxMakeEventFunctor(const EventTag&,
+@@ -635,6 +761,29 @@ wxMakeEventFunctor(const EventTag&,
                  method, handler);
  }
  
@@ -276,7 +288,7 @@ index d05793d..6e4dae4 100644
  // Create an event functor for the event table via wxDECLARE_EVENT_TABLE_ENTRY:
  // in this case we don't have the handler (as it's always the same as the
  // object which generated the event) so we must use Class as its type
-@@ -646,6 +794,14 @@ wxNewEventTableFunctor(const EventTag&, void (Class::*method)(EventArg&))
+@@ -646,6 +795,14 @@ wxNewEventTableFunctor(const EventTag&, void (Class::*method)(EventArg&))
                      method, NULL);
  }
  
@@ -291,7 +303,7 @@ index d05793d..6e4dae4 100644
  
  // many, but not all, standard event types
  
-@@ -1401,40 +1557,86 @@ private:
+@@ -1401,40 +1558,91 @@ private:
  // This is a base class used to process all method calls.
  class wxAsyncMethodCallEvent : public wxEvent
  {
@@ -326,7 +338,8 @@ index d05793d..6e4dae4 100644
 +        : wxAsyncMethodCallEvent(object), m_object(object)
 +    {
 +    }
-+
+ 
+-    virtual void Execute() = 0;
 +    wxAsyncMethodCallEventWithObject(const wxAsyncMethodCallEventWithObject<T>& other)
 +        : wxAsyncMethodCallEvent(other), m_object(other.m_object)
 +    {
@@ -334,8 +347,8 @@ index d05793d..6e4dae4 100644
 +	
 +protected:
 +	T* const m_object;
-+};
-+
+ };
+ 
 +template<typename T>
 +class wxAsyncMethodCallEventWithConstObject : public wxAsyncMethodCallEvent
 +{
@@ -344,8 +357,12 @@ index d05793d..6e4dae4 100644
 +        : wxAsyncMethodCallEvent(object),m_object(object)
 +    {
 +    }
- 
--    virtual void Execute() = 0;
++	
++	wxAsyncMethodCallEventWithConstObject(T* object)
++        : wxAsyncMethodCallEvent(object),m_object(const_cast<const T*>(object))
++    {
++    }
++
 +    wxAsyncMethodCallEventWithConstObject(const wxAsyncMethodCallEventWithConstObject<T>& other)
 +        : wxAsyncMethodCallEvent(other),m_object(other.m_object)
 +    {
@@ -358,8 +375,8 @@ index d05793d..6e4dae4 100644
 +	
 +protected:
 +	const T* const m_object;
- };
- 
++};
++
 +
  // This is a version for calling methods without parameters.
  template <typename T>
@@ -388,7 +405,7 @@ index d05793d..6e4dae4 100644
            m_method(other.m_method)
      {
      }
-@@ -1444,38 +1646,73 @@ public:
+@@ -1444,38 +1652,80 @@ public:
          return new wxAsyncMethodCallEvent0(*this);
      }
  
@@ -408,6 +425,13 @@ index d05793d..6e4dae4 100644
 +{
 +public:
 +    typedef void (T::*MethodType)() const;
++	
++	wxAsyncConstMethodCallEvent0(T* object,
++                            MethodType method)
++        : wxAsyncMethodCallEventWithConstObject<T>(object),
++          m_method(method)
++    {
++    }
 +
 +    wxAsyncConstMethodCallEvent0(const T* object,
 +                            MethodType method)
@@ -473,13 +497,14 @@ index d05793d..6e4dae4 100644
            m_method(other.m_method),
            m_param1(other.m_param1)
      {
-@@ -1486,33 +1723,75 @@ public:
+@@ -1486,33 +1736,84 @@ public:
          return new wxAsyncMethodCallEvent1(*this);
      }
  
 -    virtual void Execute() wxOVERRIDE
 +    virtual void Execute() const wxOVERRIDE
-+    {
+     {
+-        (m_object->*m_method)(m_param1);
 +        (this->m_object->*m_method)(m_param1);
 +    }
 +
@@ -503,6 +528,15 @@ index d05793d..6e4dae4 100644
 +          m_param1(x1)
 +    {
 +    }
++	
++    wxAsyncConstMethodCallEvent1(T* object,
++                            MethodType method,
++                            const ParamType1& x1)
++        : wxAsyncMethodCallEventWithConstObject<T>(object),
++          m_method(method),
++          m_param1(x1)
++    {
++    }	
 +
 +    wxAsyncConstMethodCallEvent1(const wxAsyncConstMethodCallEvent1& other)
 +        : wxAsyncMethodCallEventWithConstObject<T>(other),
@@ -519,8 +553,7 @@ index d05793d..6e4dae4 100644
 +    }	
 +
 +    virtual wxEvent *Clone() const wxOVERRIDE
-     {
--        (m_object->*m_method)(m_param1);
++    {
 +        return new wxAsyncConstMethodCallEvent1(*this);
 +    }
 +
@@ -558,7 +591,7 @@ index d05793d..6e4dae4 100644
            m_method(method),
            m_param1(x1),
            m_param2(x2)
-@@ -1520,8 +1799,7 @@ public:
+@@ -1520,8 +1821,7 @@ public:
      }
  
      wxAsyncMethodCallEvent2(const wxAsyncMethodCallEvent2& other)
@@ -568,7 +601,7 @@ index d05793d..6e4dae4 100644
            m_method(other.m_method),
            m_param1(other.m_param1),
            m_param2(other.m_param2)
-@@ -1533,13 +1811,63 @@ public:
+@@ -1533,13 +1833,74 @@ public:
          return new wxAsyncMethodCallEvent2(*this);
      }
  
@@ -600,8 +633,20 @@ index d05793d..6e4dae4 100644
 +          m_method(method),
 +          m_param1(x1),
 +          m_param2(x2)
-+    {
+     {
+-        (m_object->*m_method)(m_param1, m_param2);
 +    }
++	
++    wxAsyncConstMethodCallEvent2(T* object,
++                            MethodType method,
++                            const ParamType1& x1,
++                            const ParamType2& x2)
++        : wxAsyncMethodCallEventWithConstObject<T>(object),
++          m_method(method),
++          m_param1(x1),
++          m_param2(x2)
++    {
++    }	
 +
 +    wxAsyncConstMethodCallEvent2(const wxAsyncConstMethodCallEvent2& other)
 +        : wxAsyncMethodCallEventWithConstObject<T>(other),
@@ -620,8 +665,7 @@ index d05793d..6e4dae4 100644
 +    }
 +
 +    virtual wxEvent *Clone() const wxOVERRIDE
-     {
--        (m_object->*m_method)(m_param1, m_param2);
++    {
 +        return new wxAsyncConstMethodCallEvent2(*this);
 +    }
 +
@@ -635,7 +679,7 @@ index d05793d..6e4dae4 100644
      const MethodType m_method;
      const ParamType1 m_param1;
      const ParamType2 m_param2;
-@@ -1569,13 +1897,13 @@ public:
+@@ -1569,13 +1930,13 @@ public:
          return new wxAsyncMethodCallEventFunctor(*this);
      }
  
@@ -651,7 +695,7 @@ index d05793d..6e4dae4 100644
  };
  
  #if wxUSE_GUI
-@@ -3754,6 +4082,14 @@ public:
+@@ -3754,6 +4115,14 @@ public:
              new wxAsyncMethodCallEvent0<T>(static_cast<T*>(this), method)
          );
      }
@@ -666,7 +710,7 @@ index d05793d..6e4dae4 100644
  
      // Notice that we use P1 and not T1 for the parameter to allow passing
      // parameters that are convertible to the type taken by the method
-@@ -3767,6 +4103,15 @@ public:
+@@ -3767,6 +4136,15 @@ public:
                  static_cast<T*>(this), method, x1)
          );
      }
@@ -682,7 +726,7 @@ index d05793d..6e4dae4 100644
  
      template <typename T, typename T1, typename T2, typename P1, typename P2>
      void CallAfter(void (T::*method)(T1 x1, T2 x2), P1 x1, P2 x2)
-@@ -3776,6 +4121,15 @@ public:
+@@ -3776,6 +4154,15 @@ public:
                  static_cast<T*>(this), method, x1, x2)
          );
      }
@@ -698,12 +742,12 @@ index d05793d..6e4dae4 100644
  
      template <typename T>
      void CallAfter(const T& fn)
-@@ -3931,6 +4285,32 @@ public:
+@@ -3931,6 +4318,32 @@ public:
                              wxMakeEventFunctor(eventType, method, handler),
                              userData);
      }
 +	
-+	    template <typename EventTag, typename Class, typename EventArg, typename EventHandler>
++	template <typename EventTag, typename Class, typename EventArg, typename EventHandler>
 +    void Bind(const EventTag &eventType,
 +              void (Class::*method)(EventArg &) const,
 +              const EventHandler *handler,
@@ -731,7 +775,7 @@ index d05793d..6e4dae4 100644
  
      // User data can be associated with each wxEvtHandler
      void SetClientObject( wxClientData *data ) { DoSetClientObject(data); }
-@@ -4102,7 +4482,7 @@ WX_DEFINE_ARRAY_WITH_DECL_PTR(wxEvtHandler *, wxEvtHandlerArray, class WXDLLIMPE
+@@ -4102,7 +4515,7 @@ WX_DEFINE_ARRAY_WITH_DECL_PTR(wxEvtHandler *, wxEvtHandlerArray, class WXDLLIMPE
  // Define an inline method of wxObjectEventFunctor which couldn't be defined
  // before wxEvtHandler declaration: at least Sun CC refuses to compile function
  // calls through pointer to member for forward-declared classes (see #12452).
