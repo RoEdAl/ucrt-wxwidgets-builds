@@ -1,7 +1,7 @@
 From 19644b9df52021695f9b91aa937252108c236b19 Mon Sep 17 00:00:00 2001
 From: RoEdAl <roed@onet.eu>
 Date: Sat, 27 Aug 2022 08:01:09 +0200
-Subject: [PATCH 08/11] CMake: CMP0069
+Subject: [PATCH 08/12] CMake: CMP0069
 
 ---
  build/cmake/policies.cmake | 5 +++++

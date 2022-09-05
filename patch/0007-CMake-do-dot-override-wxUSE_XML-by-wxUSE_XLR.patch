@@ -1,7 +1,7 @@
 From 7291c8d95853e6362a70b5344d97fab125e0927d Mon Sep 17 00:00:00 2001
 From: RoEdAl <roed@onet.eu>
 Date: Fri, 26 Aug 2022 14:48:43 +0200
-Subject: [PATCH 07/11] CMake: do dot override wxUSE_XML by wxUSE_XLR
+Subject: [PATCH 07/12] CMake: do dot override wxUSE_XML by wxUSE_XLR
 
 ---
  build/cmake/init.cmake    | 1 -

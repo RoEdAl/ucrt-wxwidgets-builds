@@ -1,7 +1,7 @@
 From 00b887de82f3a163fb9562b8438b2d60e2c0cbb8 Mon Sep 17 00:00:00 2001
 From: RoEdAl <roed@onet.eu>
 Date: Mon, 5 Sep 2022 08:49:02 +0200
-Subject: [PATCH 11/11] wxWidgets: allow to use const methods as event handlers
+Subject: [PATCH 11/12] wxWidgets: allow to use const methods as event handlers
 
 ---
  include/wx/event.h        | 505 ++++++++++++++++++++++++++++++++++----
