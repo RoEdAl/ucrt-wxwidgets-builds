@@ -37,8 +37,8 @@ DownloadPkgSha1(${URL_WXWIDGETS} wxWidgets-${WXWIDGETS_VERSION}.7z 14b14fc4c5f19
 SET(URL_NINJA "http://github.com/ninja-build/ninja/releases/download/v1.11.0")
 DownloadPkgSha1(${URL_NINJA} ninja-win.zip 31c7b577d3e5be57eb8acca527f73a484ace7d8c "Ninja builder")
 
-SET(URL_MINGW64 "https://github.com/RoEdAl/ucrt-mingw-builds/releases/download/v12.2.0-rt10-ucrt3")
-DownloadPkgSha1(${URL_MINGW64} x86_64-1220-win32-seh-rt_v10-rev0.7z e20c6e12a0affcbc2e256f9e180c3e1136b10b8a "MinGW64 runtime")
+SET(URL_MINGW64 "https://github.com/RoEdAl/ucrt-mingw-builds/releases/download/v12.2.0-rt10-ucrt4")
+DownloadPkgSha1(${URL_MINGW64} x86_64-12.2.0-release-win32-seh-rt_v10-rev0.7z a14e6405851dc1285f5a19f4886ceafbea67ae86 "MinGW64 runtime")
 	
 SET(URL_GCC "http://gcc.gnu.org/onlinedocs/gcc-12.2.0")
 DownloadPkgSha1(${URL_GCC} gcc.pdf becbd022de78a4f818d53d3229a19f9edb03f88e "GCC documentation - PDF")
@@ -76,7 +76,7 @@ ENDIF()
 CMAKE_PATH(APPEND WX_WORKDIR mingw64 OUTPUT_VARIABLE MINGW_DIR)
 IF(NOT EXISTS ${MINGW_DIR})
 	MESSAGE(STATUS "[EXTR] MinGW64 runtime")
-	FILE(ARCHIVE_EXTRACT INPUT ${WX_DLDIR}/x86_64-1220-win32-seh-rt_v10-rev0.7z DESTINATION ${WX_WORKDIR})
+	FILE(ARCHIVE_EXTRACT INPUT ${WX_DLDIR}/x86_64-12.2.0-release-win32-seh-rt_v10-rev0.7z DESTINATION ${WX_WORKDIR})
 ENDIF()
 	
 CMAKE_PATH(APPEND MINGW_DIR doc OUTPUT_VARIABLE MINGW_DOC_DIR)
