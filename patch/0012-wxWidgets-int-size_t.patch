@@ -1,18 +1,18 @@
-From 622ca628d94737f206e4124cb9cb3c4ed5ad282c Mon Sep 17 00:00:00 2001
+From 3ac7a7b3f6dde29900cb9ac8845ed4d92b5da2ab Mon Sep 17 00:00:00 2001
 From: RoEdAl <roed@onet.eu>
-Date: Mon, 5 Sep 2022 19:45:01 +0200
+Date: Thu, 8 Sep 2022 13:46:36 +0200
 Subject: [PATCH 12/12] wxWidgets: int -> size_t
 
 ---
  include/wx/event.h            |  54 +++++++-----
- include/wx/generic/choicdgg.h |  76 ++++++++---------
+ include/wx/generic/choicdgg.h |  82 +++++++++---------
  include/wx/generic/helpext.h  |   2 +-
  src/common/wincmn.cpp         |   3 +-
- src/generic/choicdgg.cpp      | 156 ++++++++++++++++++----------------
+ src/generic/choicdgg.cpp      | 158 ++++++++++++++++++----------------
  src/generic/helpext.cpp       |   6 +-
  src/msw/window.cpp            |  10 +--
  src/xml/xml.cpp               |   3 +-
- 8 files changed, 165 insertions(+), 145 deletions(-)
+ 8 files changed, 169 insertions(+), 149 deletions(-)
 
 diff --git a/include/wx/event.h b/include/wx/event.h
 index 354776f..96c09fa 100644
@@ -101,7 +101,7 @@ index 354776f..96c09fa 100644
  
  // Update UI event
 diff --git a/include/wx/generic/choicdgg.h b/include/wx/generic/choicdgg.h
-index 152b581..83cd86f 100644
+index 152b581..98da2e7 100644
 --- a/include/wx/generic/choicdgg.h
 +++ b/include/wx/generic/choicdgg.h
 @@ -38,7 +38,7 @@ public:
@@ -131,7 +131,14 @@ index 152b581..83cd86f 100644
                                        const wxString *choices,
                                        long styleLbox);
  
-@@ -98,7 +98,7 @@ public:
+@@ -92,13 +92,13 @@ class WXDLLIMPEXP_CORE wxSingleChoiceDialog : public wxAnyChoiceDialog
+ public:
+     wxSingleChoiceDialog()
+     {
+-        m_selection = -1;
++        m_selection = SIZE_MAX;
+     }
+ 
      wxSingleChoiceDialog(wxWindow *parent,
                           const wxString& message,
                           const wxString& caption,
@@ -250,8 +257,9 @@ index 152b581..83cd86f 100644
                                              wxWindow *parent = NULL);
  
  // Same as above but gets position in list of strings, instead of string,
- // or -1 if no selection
+-// or -1 if no selection
 -WXDLLIMPEXP_CORE int wxGetSingleChoiceIndex(const wxString& message,
++// or SIZE_MAX if no selection
 +WXDLLIMPEXP_CORE size_t wxGetSingleChoiceIndex(const wxString& message,
                                         const wxString& caption,
                                         const wxArrayString& choices,
@@ -331,8 +339,9 @@ index 152b581..83cd86f 100644
  
  // fill the array with the indices of the chosen items, it will be empty
  // if no items were selected or Cancel was pressed - return the number of
- // selections or -1 if cancelled
+-// selections or -1 if cancelled
 -WXDLLIMPEXP_CORE int wxGetSelectedChoices(wxArrayInt& selections,
++// selections or SIZE_MAX if cancelled
 +WXDLLIMPEXP_CORE size_t wxGetSelectedChoices(wxArrayInt& selections,
                                          const wxString& message,
                                          const wxString& caption,
@@ -390,7 +399,7 @@ index fec27db..0e317bf 100644
          return m_win->HandleWindowEvent(event);
      }
 diff --git a/src/generic/choicdgg.cpp b/src/generic/choicdgg.cpp
-index 37875da..f619cb4 100644
+index 37875da..c901918 100644
 --- a/src/generic/choicdgg.cpp
 +++ b/src/generic/choicdgg.cpp
 @@ -59,12 +59,12 @@
@@ -551,7 +560,12 @@ index 37875da..f619cb4 100644
                           wxWindow *parent,
                           int WXUNUSED(x), int WXUNUSED(y),
                           bool WXUNUSED(centre),
-@@ -253,10 +253,10 @@ int wxGetSelectedChoices(wxArrayInt& selections,
+@@ -249,14 +249,14 @@ int wxGetSelectedChoices(wxArrayInt& selections,
+         // NB: intentionally do not clear the selections array here, the caller
+         //     might want to preserve its original contents if the dialog was
+         //     cancelled
+-        return -1;
++        return SIZE_MAX;
      }
  
      selections = dialog.GetSelections();
